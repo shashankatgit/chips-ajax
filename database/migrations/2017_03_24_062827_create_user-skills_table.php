@@ -12,7 +12,11 @@ class CreateUserSkillsTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('user_skills', function (Blueprint $table) {
+            $table->increments('user_id')->references('id')->on('users');
+            $table->string('skill_id')->references('id')->on('skills');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +26,6 @@ class CreateUserSkillsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('user_skills');
     }
 }

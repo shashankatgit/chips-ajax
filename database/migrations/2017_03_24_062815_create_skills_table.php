@@ -12,7 +12,11 @@ class CreateSkillsTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('skills', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('skill');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +26,6 @@ class CreateSkillsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('skills');
     }
 }
