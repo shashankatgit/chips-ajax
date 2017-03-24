@@ -22,7 +22,7 @@ Route::get('/fetch',[
     'as' => 'chips.fetch'
 ]);
 
-Route::get('/save',[
-
-    'as' => 'chips.save'
+Route::post('/save',[
+        'uses' => 'MainController@postSaveSkills',
+        'as' => 'chips.save'
 ]);

@@ -19,14 +19,46 @@ class MainController extends Controller
 
         $string = $request['str'];
 
-        $searchString = strtolower($request['string']);
+        $searchString = strtolower($string);
 
         $results = \DB::table('skills')
             ->select('skill')
             ->whereRaw('lower(skill) like \'%'.$searchString.'%\'')
             ->get();
 
-        return response()->json(['result'=>'success','records'=>$results]);
+        return response()->json(['result'=>'success','matches'=>$results]);
+
+    }
+
+    public function postSaveSkills(Request $request)
+    {
+        print_r("JSON received is : " . $request['json']);
+        $validator	=	\Validator::make($request->all(),	[
+            'json'=>'required'
+        ]);
+        if	($validator->fails()) {
+            return response()->json(['result'=>'fail','error'=>$validator->errors()]);
+        }
+
+        $user_id = 1;
+        if($request->has('user_id'))
+                $user_id=$request['user_id'];
+
+        print_r("JSON received is : " . $request['json']);
+        $skills = json_decode($request['json']);
+
+        foreach ($skills as $skill)
+        {
+            $result = \DB::table('skills')
+                ->select('skill')
+                ->whereRaw('skill='.$skill)
+                ->first();
+
+            if($result != null) //Skill is already present in database
+            {
+                $relationship = new 
+            }
+        }
 
     }
 }
