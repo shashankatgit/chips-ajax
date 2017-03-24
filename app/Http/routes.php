@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [
+    'as'=>'chips.home',
+    function () {
+        return view('home');
+}]);
+
+Route::get('/fetch',[
+   'uses' => 'MainController@getFetchSkills',
+    'as' => 'chips.fetch'
+]);
+
+Route::get('/save',[
+
+    'as' => 'chips.save'
+]);
