@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Skill;
+use App\User_Skill;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -32,7 +34,7 @@ class MainController extends Controller
 
     public function postSaveSkills(Request $request)
     {
-        print_r("JSON received is : " . $request['json']);
+        //print_r("JSON received is : " . $request['json']);
         $validator	=	\Validator::make($request->all(),	[
             'json'=>'required'
         ]);
@@ -44,21 +46,40 @@ class MainController extends Controller
         if($request->has('user_id'))
                 $user_id=$request['user_id'];
 
-        print_r("JSON received is : " . $request['json']);
+        //print_r("JSON received is : " . $request['json']);
         $skills = json_decode($request['json']);
 
         foreach ($skills as $skill)
         {
+            /* Check if skill is already present in database */
             $result = \DB::table('skills')
-                ->select('skill')
-                ->whereRaw('skill='.$skill)
+                ->where('skill' ,'=', $skill)
                 ->first();
 
-            if($result != null) //Skill is already present in database
+            if($result == null) //Skill is already present in database
             {
-                $relationship = new 
+                $result = new Skill();
+                $result->skill = $skill;
+                $result->save();
+            }
+
+            /* Check if relationship is already present in database */
+            $resultRelationship = \DB::table('user_skills')
+                ->where('skill_id' ,'=', $result->id)
+                ->where('user_id' ,'=', $user_id)
+                ->get();
+
+            if($resultRelationship == null) /* Saves only if this relationship does not already exist */
+            {
+                $relationship = new User_Skill();
+                $relationship->skill_id = $result->id;
+                $relationship->user_id = $user_id;
+
+                $relationship->save();
             }
         }
+
+        return redirect()->route('chips.home');
 
     }
 }
